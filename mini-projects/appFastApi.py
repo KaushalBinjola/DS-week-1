@@ -1,5 +1,7 @@
-from fastapi import FastAPI, Path
+from fastapi import FastAPI, Path, HTTPException
 from typing import Optional
+from fastapi.param_functions import Query
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -35,3 +37,46 @@ def qParamsw(dataVal: Optional[str] = None):
             return multiParams[i]
     return {"Data":"Null"}
 
+
+#post
+
+# create class that defines the body of post
+class Item(BaseModel):
+    name: str
+    price: float
+    brand: Optional[str] = None
+    
+@app.post("/post-ex")
+def postExample(item: Item):
+    return "OK!"
+
+
+# put
+# used to update instances 
+
+@app.put('updateMultiParams/{id}')
+def updateMulti(id:int, data:str):
+    if id not in multi_params:
+        return {"Error":"Not found"}
+    multi_params[id].data = data
+    return multi_params[id]
+
+# delete 
+# used to delete instance
+
+@app.delete('deleteFromMulti')
+def deleteMulti(id: Optional[int]=Query(None,title="Enter Query Param")):
+    if id not in multi_params:
+        return {"Error":"Not found"}
+    del multi_params[id]
+    return {"success":"true"}
+
+
+# raise status errors
+@app.get('updateMultiParams/{id}')
+def updateMulti(id:int):
+    if id not in multi_params:
+        raise HTTPException(status_code=404, detail="Id not found")
+    # multi_params[id].data = data
+    return multi_params[id]
+    
