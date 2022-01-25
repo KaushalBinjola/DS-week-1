@@ -138,3 +138,9 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# other files
+Week-5/BostonHousing.csv
+Week-6/CNN/cifar10.tgz
+Week-6/data/MNIST
+Week-6/CNN/data
